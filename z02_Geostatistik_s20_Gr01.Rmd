@@ -14,18 +14,28 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Aufgabe 04 Mit Zettel und Bleistift - Wahrscheinlichkeiten
 
-a) Verallgemeinern Sie den Additionssatz
+a)Verallgemeinern Sie den Additionssatz
 ${P}(A\cup B) = {P}(A) + {P}(B) - {P}(A\cap B)$
-für drei einander nicht ausschließende Ereignisse ${P}(A \cup B \cup C)$
+für drei einander nicht ausschließende Ereignisse ${P}(A \cup B \cup C)$.
+
+
+
+
+```{r}
+knitr::include_graphics("500px-Inclusion-exclusion.svg.png")
+# alternative Bild-Dateieinbindung
+```
 
 ${P}(A \cup B \cup C) = {P}(A) + {P}(B) + {P}(C) - {P}(A \cap B) - {P}(A \cap C) - {P}(B \cap C) + {P}(A \cap B \cap C)$
 
-b) Eintrittswahrscheinlichkeit von A für ${P}(A \mid B)$ für die Fälle
-- A und B sind unabhängig voneinander:
-P(A I B) = (P(A n B))/P(B)
+b) Bedingte Wahrscheinlichkeiten:
+Bestimmen Sie die Eintrittswahrscheinlichkeit von Ereignis A unter der Bedingung,
+dass B bereits eingetreten ist
+$P(A|B)$
+für die Fälle
+A und B sind unabhängig von einander: 
 
-- A und B schließen sich einander aus:
-P(A I B) = (P(A u B))/P(B)
+Dann gilt:\
 $$P(A \cap B) = {P}(A) * {P}(B)$$
 
 Daraus folgt:
@@ -33,13 +43,29 @@ $$P(A|B)= \frac{P(A\cap B)}{P(B)}=\frac{P(A) * P(B)}{P(B)}=P(A)$$
 
 A und B schließen einander aus
 
-$$P(A \mid B) = \frac{P(A\cap B)}{P(B)} = \frac{0}{P(B)} = 0$$
+$$P(A|B) = \frac{P(A\cap B)}{P(B)} = \frac{0}{P(B)} = 0$$
 
-c) Multiplikationssatz: 
-${P}(A \cap B \cap C) = {P}(A) * {P}(B \mid A) * P(C \mid A \cap B)$
-= 11/22 * 10/21 * 9/20 = 0,1071
+c)Multiplikationssatz
+$P(A \cap B \cap C) = P(A) * P(B \mid A) * P(C | A \cap B)$
+Während eines Fußballspiels zweier Mannschaften X und Y,
+schickt der Schiedsrichter im Abstand von jeweils 5 Minuten zufällig 
+und völlig willkürlich drei Spieler mit der roten Karte vorzeitig vom Platz. 
+Wie hoch ist die Wahrscheinlichkeit, dass bloß eine Mannschaft betroffen ist?
 
-P(A), P(B) und P(C) sint jeweils die Wahrscheinlichkeiten dafür, dass ein Spieler eine rote Karte bekommt. Nachdem ein, bzw. zwei Spieler eine rote Karte bekommen haben, verringert sich jeweils die Grundgesamtheit und die Anzahl an günstigen Fälle um eins.
+- Jede Mannschaft besteht aus 11 Spielern, zu Beginn stehen also 22 Spieler auf dem Feld. Nach der ersten roten Karte 21 Spieler, 20 nach der zweiten etc.
+
+- sind nur Spieler einer Mannschaft betroffen verändert sich das Verhältnis der Mannschaften von 11:11, zu 10:11, zu 9:11, zu 8:11.
+
+Daraus folgt
+
+${P}(Team A \cap Team A \cap Team A) = {P}(11/22) * {P}(10/21) * P(9/20) * 2$
+
+```{r}
+P=(11/22)*(10/21)*(9/20)*2
+print(P)
+# Wie Ziehen mit/ohne Zurücklegen in R umsetzen??
+```
+Die Wahrscheinlichkeit, dass ein Team drei rote Karten in Folge bekommt beträgt ~21.42%
 
 [@Hedderich.2018]
 
@@ -47,8 +73,8 @@ P(A), P(B) und P(C) sint jeweils die Wahrscheinlichkeiten dafür, dass ein Spiel
 
 ```{r aufgabe 05}
 #Daten laden
+library(tidyverse)
 data <- read.delim("data/yingtan_20_v1.csv",
-                   header = TRUE,
                    sep = ";",
                    dec = ",")
 ```
@@ -63,9 +89,10 @@ str(data$Ca_exch)
 b) Sie haben sich mit dem Aufbau des Datensatzes vertraut gemacht und bemerkt, dass für zwei Standorte keine Messwerte vorliegen. Erstellen Sie ein neues Objekt ljz, in dem diese Proben nicht mehr auftauchen.
 ```{r aufgabe 05b}
 #NA definieren
-is.na(data) <- data == -9999.000
+is.na(data) <- data == -9999
 #Entfernung von NA-Werten
 ljz <- na.omit(data)
+#ljz
 ```
 c) Beim Transfer der Laborergebnisse in die Messtabelle scheint bei den austauschbaren Na-Ionen ein Missgeschick passiert zu sein. Identifizieren Sie den fehlerhaften Wert und ersetzen Sie ihn durch die in R gängige NoData-Bezeichnung 'NA'. Fallen Ihnen zusätzliche Werte auf, die bei möglichen Rechenoperationen zu Problemen führen könnten? Begründen Sie ihre Wahl und beheben Sie das Problem auf angemessene Weise.
 ```{r aufgabe 05c}
@@ -91,7 +118,6 @@ c) … das Ergebnis in eine sinnvoll benannte CSV-Datei schreibt. Führen Sie di
 #Reihenfolge nach abnehmender Ca-Ionenkonzentration
 #als csv schreiben
 library(dplyr)
-library(tibble)
 catA <- dplyr::filter(data, 
                       SAMPLING == "catA") %>%
   arrange(desc(Ca_exch)) %>%
