@@ -2,8 +2,10 @@
 title: "Aufgabenzettel 02"
 author: "Gruppe 01"
 date: "29 4 2020"
+output:
+  pdf_document: default
+  html_document: default
 bibliography: literatur.bib
-output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -13,21 +15,28 @@ knitr::opts_chunk$set(echo = TRUE)
 # Aufgabe 04 Mit Zettel und Bleistift - Wahrscheinlichkeiten
 
 a) Verallgemeinern Sie den Additionssatz
-P(A u B) = P(A) + P(B) - P(A n B)
-für drei einander nicht ausschließende Ereignisse P(A u B u C)
+${P}(A\cup B) = {P}(A) + {P}(B) - {P}(A\cap B)$
+für drei einander nicht ausschließende Ereignisse ${P}(A \cup B \cup C)$
 
-P(A u B u C) = P(A) + P(B) + P(C) - P(A n B) - P(A n C) - P(B n C) + P(A n B n C)
+${P}(A \cup B \cup C) = {P}(A) + {P}(B) + {P}(C) - {P}(A \cap B) - {P}(A \cap C) - {P}(B \cap C) + {P}(A \cap B \cap C)$
 
-b) Eintrittswahrscheinlichkeit von A für P(A I B) für die Fälle
+b) Eintrittswahrscheinlichkeit von A für ${P}(A \mid B)$ für die Fälle
 - A und B sind unabhängig voneinander:
 P(A I B) = (P(A n B))/P(B)
 
 - A und B schließen sich einander aus:
 P(A I B) = (P(A u B))/P(B)
+$$P(A \cap B) = {P}(A) * {P}(B)$$
 
+Daraus folgt:
+$$P(A|B)= \frac{P(A\cap B)}{P(B)}=\frac{P(A) * P(B)}{P(B)}=P(A)$$
+
+A und B schließen einander aus
+
+$$P(A \mid B) = \frac{P(A\cap B)}{P(B)} = \frac{0}{P(B)} = 0$$
 
 c) Multiplikationssatz: 
-P(A n B n C) = P(A) * P(B I A) * P(C I (A n B)
+${P}(A \cap B \cap C) = {P}(A) * {P}(B \mid A) * P(C \mid A \cap B)$
 = 11/22 * 10/21 * 9/20 = 0,1071
 
 P(A), P(B) und P(C) sint jeweils die Wahrscheinlichkeiten dafür, dass ein Spieler eine rote Karte bekommt. Nachdem ein, bzw. zwei Spieler eine rote Karte bekommen haben, verringert sich jeweils die Grundgesamtheit und die Anzahl an günstigen Fälle um eins.
@@ -72,7 +81,7 @@ is.na(ljz[, "Na_exch"]) <- ljz$Na_exch == 0
 ljz$Na_exch
 ```
 # Aufgabe 06 Tinn R
-a)In R lassen sich Arbeitsschritte prima automatisieren.
+a) In R lassen sich Arbeitsschritte prima automatisieren.
 Stellen Sie sich vor, ihr Chef, der völlig zu Recht von R begeistert ist, möchte, dass Sie für ein neues Projekt aus dem ursprünglichen Datensatz nur die Standorte der Catena A extrahieren.
 Er verlangt von Ihnen ein R-Skript, das außerdem …
 b) … die Reihenfolge der Standorte nach abnehmender Ca-Ionenkonzentration sortiert.
@@ -90,5 +99,8 @@ catA <- dplyr::filter(data,
               sep = ";",
               dec = ",")
 ```
-
-# Literatur
+Öffnen des RSkripts mit der Funktion:
+```{r aufgabe 06c}
+source(file = "catA.R")
+```
+## Literatur
