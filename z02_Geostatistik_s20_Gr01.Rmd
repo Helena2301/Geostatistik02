@@ -1,0 +1,94 @@
+---
+title: "Aufgabenzettel 02"
+author: "Gruppe 01"
+date: "29 4 2020"
+bibliography: literatur.bib
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Aufgabe 04 Mit Zettel und Bleistift - Wahrscheinlichkeiten
+
+a) Verallgemeinern Sie den Additionssatz
+P(A u B) = P(A) + P(B) - P(A n B)
+für drei einander nicht ausschließende Ereignisse P(A u B u C)
+
+P(A u B u C) = P(A) + P(B) + P(C) - P(A n B) - P(A n C) - P(B n C) + P(A n B n C)
+
+b) Eintrittswahrscheinlichkeit von A für P(A I B) für die Fälle
+- A und B sind unabhängig voneinander:
+P(A I B) = (P(A n B))/P(B)
+
+- A und B schließen sich einander aus:
+P(A I B) = (P(A u B))/P(B)
+
+
+c) Multiplikationssatz: 
+P(A n B n C) = P(A) * P(B I A) * P(C I (A n B)
+= 11/22 * 10/21 * 9/20 = 0,1071
+
+P(A), P(B) und P(C) sint jeweils die Wahrscheinlichkeiten dafür, dass ein Spieler eine rote Karte bekommt. Nachdem ein, bzw. zwei Spieler eine rote Karte bekommen haben, verringert sich jeweils die Grundgesamtheit und die Anzahl an günstigen Fälle um eins.
+
+[@Hedderich.2018]
+
+# Aufgabe 05 Der Übungsdatensatz
+
+```{r aufgabe 05}
+#Daten laden
+data <- read.delim("data/yingtan_20_v1.csv",
+                   header = TRUE,
+                   sep = ";",
+                   dec = ",")
+```
+a) In was für einer Datenstruktur wurde die geladene Datei in R abgelegt?
+Wie viele Beobachtungen und Variablen enthält sie? Von welchem Datentyp ist die Variable 'Ca_exch'? 
+```{r aufgabe 05a}
+#Datenstruktur
+str(data)
+
+str(data$Ca_exch)
+```
+b) Sie haben sich mit dem Aufbau des Datensatzes vertraut gemacht und bemerkt, dass für zwei Standorte keine Messwerte vorliegen. Erstellen Sie ein neues Objekt ljz, in dem diese Proben nicht mehr auftauchen.
+```{r aufgabe 05b}
+#NA definieren
+is.na(data) <- data == -9999.000
+#Entfernung von NA-Werten
+ljz <- na.omit(data)
+```
+c) Beim Transfer der Laborergebnisse in die Messtabelle scheint bei den austauschbaren Na-Ionen ein Missgeschick passiert zu sein. Identifizieren Sie den fehlerhaften Wert und ersetzen Sie ihn durch die in R gängige NoData-Bezeichnung 'NA'. Fallen Ihnen zusätzliche Werte auf, die bei möglichen Rechenoperationen zu Problemen führen könnten? Begründen Sie ihre Wahl und beheben Sie das Problem auf angemessene Weise.
+```{r aufgabe 05c}
+#Spalte mit Na-Ionen
+ljz$Na_exch
+#In Zeile 96 ist ein negativer Wert
+#Diesen Wert als NA setzen
+is.na(ljz[, "Na_exch"]) <- ljz$Na_exch < 0
+#Außerdem gibt es in derselben Spalte einige Werte mit einer 0
+#Da man nicht durch 0 teilen oder die Wurzel aus 0 berechnen kann,
+#kann dies zu Problemen führen
+is.na(ljz[, "Na_exch"]) <- ljz$Na_exch == 0
+ljz$Na_exch
+```
+# Aufgabe 06 Tinn R
+a)In R lassen sich Arbeitsschritte prima automatisieren.
+Stellen Sie sich vor, ihr Chef, der völlig zu Recht von R begeistert ist, möchte, dass Sie für ein neues Projekt aus dem ursprünglichen Datensatz nur die Standorte der Catena A extrahieren.
+Er verlangt von Ihnen ein R-Skript, das außerdem …
+b) … die Reihenfolge der Standorte nach abnehmender Ca-Ionenkonzentration sortiert.
+c) … das Ergebnis in eine sinnvoll benannte CSV-Datei schreibt. Führen Sie die Schritte 6 a bis c in einer Pipe aus und binden Sie diese in ihr Protokoll ein. Speichern Sie die Pipe zusätzlich als .R-Skript in ihrem Kursordner ab und geben Sie im Protokoll den Befehl an, mit dem es sich in der Konsole ausführen lässt. 
+```{r aufgabe 06}
+#Aus data Standorte der Catena A
+#Reihenfolge nach abnehmender Ca-Ionenkonzentration
+#als csv schreiben
+library(dplyr)
+library(tibble)
+catA <- dplyr::filter(data, 
+                      SAMPLING == "catA") %>%
+  arrange(desc(Ca_exch)) %>%
+  write.table("data/catA.csv",
+              sep = ";",
+              dec = ",")
+```
+
+# Literatur
