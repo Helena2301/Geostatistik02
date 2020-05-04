@@ -40,9 +40,10 @@ $$P(A|B)= \frac{P(A\cap B)}{P(B)}=\frac{P(A) * P(B)}{P(B)}=P(A)$$
 - A und B schließen einander aus \
 A und B haben keine gemeinsame Schnittmenge.
 $$P(A|B) = \frac{P(A\cap B)}{P(B)} = \frac{0}{P(B)} = 0$$
-Siehe Venn-Diagramme in [@Hedderich.2018]
+Siehe Venn-Diagramme in [@Hedderich.2018] \
+
 c)Multiplikationssatz
-$P(A \cap B \cap C) = P(A) * P(B \mid A) * P(C | A \cap B)$
+$$P(A \cap B \cap C) = P(A) * P(B \mid A) * P(C | A \cap B)$$
 Während eines Fußballspiels zweier Mannschaften X und Y, schickt der Schiedsrichter im Abstand von jeweils 5 Minuten zufällig und völlig willkürlich drei Spieler mit der roten Karte vorzeitig vom Platz. 
 Wie hoch ist die Wahrscheinlichkeit, dass bloß eine Mannschaft betroffen ist?
 
@@ -75,6 +76,9 @@ str(data)
 
 str(data$Ca_exch)
 ```
+Die geladene Datei wurde als Data Frame angelegt und enthält 337 Beobachtungen sowie neun Variablen. \
+Die Variable 'Ca_exch' ist als Typ numeric gespeichert. \
+
 b) Sie haben sich mit dem Aufbau des Datensatzes vertraut gemacht und bemerkt, dass für zwei Standorte keine Messwerte vorliegen. Erstellen Sie ein neues Objekt ljz, in dem diese Proben nicht mehr auftauchen.
 ```{r aufgabe 05b}
 #NA definieren
